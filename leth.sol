@@ -59,7 +59,7 @@ contract LETH is EIP20Interface {
     uint8 public decimals = 5;            //How many decimals to show.
     string public symbol = "LETH";        //An identifier: eg SBX
 
-    constructor() public {
+    function LETH() public {
         balances[msg.sender] = totalSupply;               // Give the creator all initial tokens
     }
 
