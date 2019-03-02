@@ -64,7 +64,10 @@ contract LETH is EIP20Interface {
     }
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
+        require(_to != address(0));
         require(balances[msg.sender] >= _value);
+        require(balances[_to] + _value > balances[_to]);
+
         balances[msg.sender] -= _value;
         balances[_to] += _value;
         emit Transfer(msg.sender, _to, _value); //solhint-disable-line indent, no-unused-vars
@@ -74,6 +77,7 @@ contract LETH is EIP20Interface {
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         uint256 allowance = allowed[_from][msg.sender];
         require(balances[_from] >= _value && allowance >= _value);
+        require(balances[_to] + _value > balances[_to]);
         balances[_to] += _value;
         balances[_from] -= _value;
         if (allowance < MAX_UINT256) {
@@ -89,6 +93,7 @@ contract LETH is EIP20Interface {
     }
 
     function approve(address _spender, uint256 _value) public returns (bool success) {
+        require((_value == 0) || (allowed[msg.sender][_spender] == 0));
         allowed[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value); //solhint-disable-line indent, no-unused-vars
         return true;
